@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rails World 2025 Countdown</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* Custom global styles */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            /* Apply the primary purple background */
+            background-color: #3B1D62;
+             /* A subtle radial gradient to add some depth like the previous version,
+               Tailwind doesn't easily support complex radial gradients out-of-the-box for background-image.
+               This is a simple way to add it if desired. For pure Tailwind, you'd omit this.
+               Or use a simpler linear gradient with Tailwind classes if that suffices.
+            */
+            background-image: radial-gradient(ellipse at center,
+                                             rgba(83, 43, 138, 0.6) 0%, /* Lighter purple center, related to #532b8a */
+                                             #3B1D62 70%);
+        }
+
+        /* For text shadows, Tailwind doesn't have extensive text-shadow utilities by default.
+           You can add custom utilities or use inline styles if absolutely needed.
+           For this example, we'll rely on font size and color for emphasis.
+        */
+         .text-shadow-custom {
+            text-shadow: 0 0 10px rgba(255,255,255,0.15), 0 0 20px rgba(233, 30, 99, 0.3); /* Subtle white and pink glow */
+        }
+        .text-shadow-title {
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-purple': '#3B1D62',
+                        'accent-magenta': '#880c51',
+                        'bright-pink': '#E91E63', // Used for subtitle/highlights
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="h-screen m-0 p-0 overflow-hidden text-white flex flex-col justify-center items-center text-center antialiased">
+
+    <div class="container p-5 mx-auto">
+        <header class="mb-8 md:mb-12">
+            <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-shadow-title">
+                RAILS WORLD
+            </h1>
+            <p class="text-lg sm:text-xl md:text-2xl font-bold text-bright-pink uppercase tracking-wider mt-1 md:mt-2">
+                SEPT 4 & 5, 2025 • AMSTERDAM
+            </p>
+        </header>
+
+        <div id="countdown-container" class="w-full">
+            <div id="countdown" class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4 sm:gap-x-6 sm:gap-y-6 md:gap-x-8 md:gap-y-8 w-full max-w-xs sm:max-w-md md:max-w-2xl mx-auto">
+                <!-- Days -->
+                <div class="time-block bg-white/5 p-4 sm:p-6 rounded-lg shadow-xl">
+                    <span class="number block text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-none text-shadow-custom" id="days">00</span>
+                    <span class="label block text-xs sm:text-sm font-light uppercase text-white/70 mt-2 tracking-wider">Days</span>
+                </div>
+                <!-- Hours -->
+                <div class="time-block bg-white/5 p-4 sm:p-6 rounded-lg shadow-xl">
+                    <span class="number block text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-none text-shadow-custom" id="hours">00</span>
+                    <span class="label block text-xs sm:text-sm font-light uppercase text-white/70 mt-2 tracking-wider">Hours</span>
+                </div>
+                <!-- Minutes -->
+                <div class="time-block bg-white/5 p-4 sm:p-6 rounded-lg shadow-xl">
+                    <span class="number block text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-none text-shadow-custom" id="minutes">00</span>
+                    <span class="label block text-xs sm:text-sm font-light uppercase text-white/70 mt-2 tracking-wider">Minutes</span>
+                </div>
+                <!-- Seconds -->
+                <div class="time-block bg-white/5 p-4 sm:p-6 rounded-lg shadow-xl">
+                    <span class="number block text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-none text-shadow-custom" id="seconds">00</span>
+                    <span class="label block text-xs sm:text-sm font-light uppercase text-white/70 mt-2 tracking-wider">Seconds</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="absolute bottom-5 left-1/2 -translate-x-1/2 text-xs sm:text-sm text-white/40 font-light">
+        Anticipation is building.
+    </footer>
+
+    <script>
+        const countdownDate = new Date("September 4, 2025 00:00:00 GMT+0200").getTime(); // Amsterdam is GMT+2 in summer (CEST for example)
+
+        const daysEl = document.getElementById('days');
+        const hoursEl = document.getElementById('hours');
+        const minutesEl = document.getElementById('minutes');
+        const secondsEl = document.getElementById('seconds');
+        const countdownDisplay = document.getElementById('countdown');
+        const countdownContainer = document.getElementById('countdown-container');
+        const headerEl = document.querySelector('header');
+        const footerEl = document.querySelector('footer');
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = countdownDate - now;
+
+            if (distance < 0) {
+                clearInterval(interval);
+                if (countdownContainer) {
+                    countdownContainer.innerHTML = `
+                        <div class="text-3xl sm:text-4xl md:text-5xl font-bold text-bright-pink py-10 px-5 leading-tight">
+                            Welcome to Rails World 2025!
+                        </div>`;
+                }
+                if (headerEl) {
+                    headerEl.querySelector('h1').textContent = "RAILS WORLD IS LIVE!";
+                    headerEl.querySelector('p').textContent = "ENJOY AMSTERDAM!";
+                }
+                if (footerEl) {
+                    footerEl.textContent = "The event is happening now!";
+                }
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            daysEl.textContent = String(days).padStart(2, '0');
+            hoursEl.textContent = String(hours).padStart(2, '0');
+            minutesEl.textContent = String(minutes).padStart(2, '0');
+            secondsEl.textContent = String(seconds).padStart(2, '0');
+        }
+
+        const interval = setInterval(updateCountdown, 1000);
+        updateCountdown(); // Initial call to display immediately
+    </script>
+</body>
+</html>
